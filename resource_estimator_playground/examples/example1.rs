@@ -50,7 +50,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     // seconds).
     println!("Number of physical qubits: {}", result.physical_qubits());
     println!(
-        "Runtime:                   {:.2e} secs",
+        "Runtime:                   {:.2e} ns",
         result.runtime() as f64 / 1e9
     );
 

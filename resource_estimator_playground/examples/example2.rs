@@ -1,7 +1,7 @@
 use std::fs::File;
 use std::io::Write;
-use std::rc::Rc;
 use serde_json::json;
+use std::rc::Rc;
 
 use resource_estimator::{
     estimates::{ErrorBudget, PhysicalResourceEstimation},
@@ -9,47 +9,63 @@ use resource_estimator::{
 };
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    // Setup the quantum error correction code, using the Floquet code for this example.
-    let code = Protocol::floquet_code();
+    // Prepare a vector to store results for multiple error budgets.
+    let mut results = Vec::new();
 
-    // Define a qubit model with a specific error rate; here, we use a Majorana-type qubit.
-    let qubit = Rc::new(PhysicalQubit::qubit_maj_ns_e6());
+    // Loop over different values of the logical error budget (e.g., 0.001, 0.01, 0.1)
+    for error_budget_value in [0.001, 0.01, 0.1] {
+        // Re-create each component needed for the estimation to avoid ownership issues.
+        
+        // Define the protocol (quantum error correction code)
+        let code = Protocol::floquet_code();
+        
+        // Define a qubit model with a specific error rate; here, we use a Majorana-type qubit.
+        let qubit = Rc::new(PhysicalQubit::qubit_maj_ns_e6());
 
-    // Setup a T factory builder to handle state distillation rounds for the estimation task.
-    let builder = TFactoryBuilder::default();
+        // Setup a T factory builder to handle state distillation rounds for the estimation task.
+        let builder = TFactoryBuilder::default();
 
-    // Define logical resource counts with parameters that specify the quantum operations needed.
-    let logical_counts = Rc::new(LogicalResourceCounts {
-        num_qubits: 100,
-        t_count: 10,
-        rotation_count: 10,
-        rotation_depth: 5,
-        ccz_count: 100,
-        ccix_count: 0,
-        measurement_count: 10,
-    });
+        // Define logical resource counts with a fixed number of qubits.
+        let logical_counts = Rc::new(LogicalResourceCounts {
+            num_qubits: 100,
+            t_count: 10,
+            rotation_count: 10,
+            rotation_depth: 5,
+            ccz_count: 100,
+            ccix_count: 0,
+            measurement_count: 10,
+        });
 
-    // Set up an error budget for resource estimation.
-    let budget = ErrorBudget::new(0.001, 0.001, 0.001);
+        // Set up an error budget for the resource estimation using the current budget value.
+        let budget = ErrorBudget::new(error_budget_value, error_budget_value, error_budget_value);
 
-    // Create an estimation instance with the specified setup.
-    let estimation = PhysicalResourceEstimation::new(code, qubit, builder, logical_counts, budget);
+        // Create an estimation instance with the specified setup, passing fresh instances each time.
+        let estimation = PhysicalResourceEstimation::new(
+            code,      // Passing fresh instance of `code`
+            qubit,     // Passing fresh instance of `qubit`
+            builder,   // Passing fresh instance of `builder`
+            logical_counts, // Passing fresh instance of `logical_counts`
+            budget,    // Passing fresh instance of `budget`
+        );
 
-    // Perform the estimation and retrieve the results.
-    let result = estimation
-        .estimate()
-        .expect("estimation does not fail");
+        // Perform the estimation and retrieve the results.
+        let result = estimation
+            .estimate()
+            .expect("estimation does not fail");
 
-    // Prepare the results in JSON format for analysis in Python.
-    let json_result = json!({
-        "physical_qubits": result.physical_qubits(),
-        "runtime_seconds": result.runtime() as f64 / 1e9
-    });
-    
-    // Write the results to a JSON file in the results directory for easy integration with the Python script.
+        // Append each result to the results vector in JSON format.
+        results.push(json!({
+            "logical_error_budget": error_budget_value,
+            "physical_qubits": result.physical_qubits(),
+            "runtime_seconds": result.runtime() as f64 / 1e9
+        }));
+    }
+
+    // Write all results to a JSON file in the results directory.
+    let json_results = json!({ "estimation_results": results });
     let mut file = File::create("./results/example2.json")?;
-
-    file.write_all(json_result.to_string().as_bytes())?;
+    file.write_all(json_results.to_string().as_bytes())?;
 
     Ok(())
 }
+

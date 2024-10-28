@@ -5,7 +5,7 @@ This repository hosts a collection of projects around quantum resource estimatio
 ## Directory Structure
 
 - **RE_intro**: A set of Jupyter notebooks introducing the basics of resource estimation with Q#. These tutorials are based on the official Microsoft guide, which can be found [here](https://learn.microsoft.com/en-us/azure/quantum/intro-to-resource-estimation).
-- **resource_estimator_playground**: - **resource_estimator_playground**: Uses Rust's API to allow custom resource estimation (with a view to extend this to different quantum architechtures in the future)
+- **resource_estimator_playground**: Uses Rust's API to allow custom resource estimation (which allows for different quantum architechtures)
  This includes custom examples and modifications inspired by Q#’s Alice & Bob resource estimator, which can be found [here](https://github.com/Alice-Bob-SW/qsharp-alice-bob-resource-estimator/tree/main).
 
 ## Setup & Installation
@@ -21,5 +21,5 @@ This repository hosts a collection of projects around quantum resource estimatio
     conda env create -f environment.yml
     conda activate resource-estimator-env
     ```
-   Note: The `environment.yml` file contains all necessary dependencies, but ensure Rust is installed separately as described.
+   Note: The `environment.yml` file contains all necessary dependencies, but Rust is installed separately.
 

@@ -1,1 +1,1 @@
-{"physical_qubits":34840,"runtime_seconds":0.000351}
+{"estimation_results":[{"logical_error_budget":0.001,"physical_qubits":34840,"runtime_seconds":0.000351},{"logical_error_budget":0.01,"physical_qubits":34840,"runtime_seconds":0.0003465},{"logical_error_budget":0.1,"physical_qubits":12212,"runtime_seconds":0.0003375}]}
