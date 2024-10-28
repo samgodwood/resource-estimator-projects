@@ -1,30 +1,28 @@
-# Resource Estimator Playground
+# resource_estimator_playground
 
-This project is a custom setup for experimenting with Microsoft’s resource estimator. Based on Alice & Bob's architecture, this directory has been adapted to support custom Q# files and different quantum error correction protocols.
+The *resource_estimator_playground* directory uses Microsoft Azure's Rust’s API for quantum resource estimation.
 
-## Structure
+## Contents
 
-- **src**: Contains the main Rust code for resource estimation, adapted to run Q# scripts and generate physical resource estimates.
-- **examples**: Sample scripts demonstrating the resource estimation process for different algorithms and logical setups.
-- **qsharp**: Folder for custom Q# files defining specific quantum algorithms to estimate resources for.
+- **examples/**
+  - **example1.rs**: Uses predefined architectures to perform resource estimation by taking logical resource counts from an algorithm defined in a Q# file (*adder.qs*). An extension of the example given [here](https://github.com/microsoft/qsharp/blob/main/resource_estimator/examples/basic_logical_counts.rs).
+  - **example2.rs**: Defines logical resource counts directly and writes the resource estimation results to a JSON file (*results/example2.json*) for further analysis.
+- **results/**
+  - **example2.json**: JSON output from *example2.rs* containing resource estimation data.
+  - **example2.py**: A Python script for analyzing the JSON data produced by *example2.rs*.
 
 ## Usage
 
-1. **Building the Project**:
+1. **Build the Project**: Run the following command to compile the code.
     ```bash
-    cd resource_estimator_playground
-    cargo build --release
+    cargo build
     ```
 
-2. **Running Examples**:
-    Run the `elliptic_log` example:
+2. **Run Examples**: Execute a specific example using `cargo run`. For instance, to run *example1*:
     ```bash
-    cargo run --example elliptic_log
+    cargo run --example example1
     ```
-
-    Run a custom Q# file:
+   To run *example2* and output results to JSON:
     ```bash
-    cargo run --example <your_example>
+    cargo run --example example2
     ```
-
----
