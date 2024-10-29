@@ -21,3 +21,5 @@ The *resource_estimator_playground* directory uses Microsoft Azure's Rust’s AP
     cargo run --example=example2
     ```
    Then use `python results/example2.py` to run the python script.
+
+Note: All examples currently use the Azure pre-defined floquet code and majorana qubits, however this can be changed to use the (also predefined) surface code and superconducting qubits.
