@@ -7,7 +7,7 @@ The *resource_estimator_playground* directory uses Microsoft Azure's Rust’s AP
 - **examples/**
   - **example1.rs**: Uses predefined architectures to perform resource estimation by taking logical resource counts from an algorithm defined in a Q# file (*adder.qs*). An small extension of the example given [here](https://github.com/microsoft/qsharp/blob/main/resource_estimator/examples/basic_logical_counts.rs).
   - **example2.rs**: Defines logical resource counts directly and writes the resource estimation results to a JSON file (*results/example2.json*).
-- **schwinger_model_estimates.rs** Implements a resource estimation for a single timestep of the Schwinger model, based on resource counts from  arXiv:2002.11146(theorem 8). Writes the resource estimation results to a JSON file (*results/schwinger_model_estimates.json*).
+  - **schwinger_model_estimates.rs** Implements a resource estimation for a single timestep of the Schwinger model, based on resource counts from [arXiv:2002.11146](https://arxiv.org/abs/2002.11146) (theorem 8). Writes the resource estimation results to a JSON file (*results/schwinger_model_estimates.json*).
 
 ## Usage
 
