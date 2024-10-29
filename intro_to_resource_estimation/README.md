@@ -1,6 +1,6 @@
-# RE_intro
+# intro_to_resource_estimation
 
-The *RE_intro* directory contains introductory notebooks for learning and experimenting with Microsoft’s Q# resource estimator, based on Microsoft’s official tutorials.
+The *intro_to_resource_estimation* directory contains introductory notebooks for learning and experimenting with Microsoft’s Q# resource estimator, based on Microsoft’s official tutorials.
 
 ## Contents
 

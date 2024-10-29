@@ -11,48 +11,39 @@ use resource_estimator::{
 /// Function to calculate the number of qubits and T-gates for the Schwinger model
 /// based on Theorem 8 from https://arxiv.org/abs/2002.11146.
 fn schwinger_model_params(lambda: u64) -> (u64, u64) {
-    // Currently just placeholder values for N (number of spatial lattice sites) and δ_circ (circuit synthesis error)
+    // Currently just placeholder values for N (number of spatial lattice sites) and detla_circ (circuit synthesis error)
     let n: u64 = 10; 
     let delta_circ: f64 = 1e-3; 
 
-    // Calculate η (number of qubits per link register)
+    // Calculate eta (number of qubits per link register)
     let eta = ((2.0 * lambda as f64).log2().ceil()) as u64;
 
     // Calculate the number of qubits required using Theorem 8
     let num_qubits = n * (eta + 1) + 4 * eta - (eta as f64).log2().floor() as u64 - 1;
 
-    // Compute ln_term = ln((6N - 5)/δ_circ)
+    // Compute ln_term = ln((6N - 5)/detla_circ)
     let ln_term = ((6.0 * n as f64 - 5.0) / delta_circ).ln();
 
     // Defining terms for lambda_delta calculation
-
-    // Term 1: 2 * (N - 1) * (96 * η^2 + 24 * (1 - η)) * log2(η)
     let term1 = 2.0 * (n as f64 - 1.0) * (96.0 * eta.pow(2) as f64 + 24.0 * (1.0 - eta as f64)) * (eta as f64).log2();
-
-    // Term 2: 4.45 * η * log2(3 * η)
     let term2 = 4.45 * eta as f64 * (3.0 * eta as f64).log2();
-
-    // Term 3: (10.35 + 4.45 * η) * ln_term
     let term3 = (10.35 + 4.45 * eta as f64) * ln_term;
-
-    // Term 4: -200 * η + 133.95
     let term4 = -200.0 * eta as f64 + 133.95;
-
-    // Term 5: 1.15 * log2(2 * (6N - 5) / δ_circ)
     let term5 = 1.15 * ((2.0 * (6.0 * n as f64 - 5.0)) / delta_circ).log2();
 
-    // Numerator: Combining all terms for the numerator
+    // Numerator
     let numerator = term1 + term2 + term3 + term4 + term5;
 
-    // Denominator: N * η^2 + N * η * ln_term
+    // Denominator
     let denominator = n as f64 * eta.pow(2) as f64 + n as f64 * eta as f64 * ln_term;
 
     // Calculate lambda_delta
     let lambda_delta = numerator / denominator;
-    // Compute the average number of T-gates required
+
+    // Compute the number of T-gates required
     let t_gates = ((n as f64) * (eta as f64).powi(2) + (n as f64) * eta as f64 * ln_term) * lambda_delta;
 
-    // Return the number of qubits and T-gates (rounded up to the nearest integer)
+    // Return the number of qubits and T-gates
     (num_qubits, t_gates.ceil() as u64)
 
 }
