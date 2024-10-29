@@ -23,7 +23,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     //    distillation rounds.
     let builder = TFactoryBuilder::default();
 
-    // 4) The logical resource overhead;
+    // 4) The logical resource overhead taken from a qsharp file;
     let filename = format!("{}/qsharp/adder.qs", env!("CARGO_MANIFEST_DIR"));
     let logical_counts = Rc::new(
         LogicalCounts::from_qsharp(filename).map_err(|e| format!("Error: {}", e))?

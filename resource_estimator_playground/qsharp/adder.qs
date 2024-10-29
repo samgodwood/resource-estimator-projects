@@ -1,3 +1,6 @@
+// Algorithm to implement the ripple carry adder 
+//(see https://learn.microsoft.com/en-us/qsharp/api/qsharp-lang/microsoft.quantum.unstable.arithmetic/ripplecarrycgincbyle)
+
 namespace Samples {
     open Microsoft.Quantum.Unstable.Arithmetic;
 
