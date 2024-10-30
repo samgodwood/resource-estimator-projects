@@ -16,11 +16,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     for error_budget_value in [0.001, 0.01, 0.1] {
         // Re-create each component needed for the estimation to avoid ownership issues.
         
-        // Define the protocol (quantum error correction code)
-        let code = Protocol::floquet_code();
-        
-        // Define a qubit model with a specific error rate; here, we use a Majorana-type qubit.
-        let qubit = Rc::new(PhysicalQubit::qubit_maj_ns_e6());
+        // Choose the surface code as our QEC code
+        let code = Protocol::surface_code_gate_based();
+
+        // // Choose a superconducting qubit
+        let qubit = Rc::new(PhysicalQubit::qubit_gate_ns_e3());
 
         // Setup a T factory builder to handle state distillation rounds for the estimation task.
         let builder = TFactoryBuilder::default();

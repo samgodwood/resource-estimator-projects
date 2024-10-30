@@ -58,11 +58,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         // Get the number of qubits and T gates for the current cutoff
         let (num_qubits, num_t_gates) = schwinger_model_params(hilbert_cutoff);
 
-        // Define the protocol (quantum error correction code)
-        let code = Protocol::floquet_code();
+        // Choose the surface code as our QEC code
+        let code = Protocol::surface_code_gate_based();
 
-        // Define a qubit model with a specific error rate; we use a Majorana-type qubit as before
-        let qubit = Rc::new(PhysicalQubit::qubit_maj_ns_e6());
+        // Choose a superconducting qubit
+        let qubit = Rc::new(PhysicalQubit::qubit_gate_ns_e3());
 
         // Setup a T factory builder
         let builder = TFactoryBuilder::default();

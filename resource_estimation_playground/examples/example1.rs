@@ -10,13 +10,13 @@ use qsharp_alice_bob_resource_estimator::LogicalCounts;
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     // There are 5 ingredients that we need to perform resource estimation.
 
-    // 1) A quantum error correction code; in this example we are using a
-    //    Floquet code.
-    let code = Protocol::floquet_code();
+    // 1) A quantum error correction code; in this example we are using
+    //    the surface code.
+    let code = Protocol::surface_code_gate_based();
 
-    // 2) A qubit model; in this example we are using a Majorana type qubit
-    //    using a physical error rate of 1e-6.
-    let qubit = Rc::new(PhysicalQubit::qubit_maj_ns_e6());
+    // 2) A qubit model; in this example we are using a "near-term" superconducting
+    //    qubit
+    let qubit = Rc::new(PhysicalQubit::qubit_gate_ns_e3());
 
     // 3) A factory builder to provide magic states; in this example we are
     //    using a T factory builder that can create T factories using multiple

@@ -20,7 +20,7 @@ for i, cutoff in enumerate(hilbert_cutoffs):
 
 plt.xlabel("Number of Physical Qubits")
 plt.ylabel("Runtime (seconds)")
-plt.title("Runtime vs. Physical Qubits for Different Hilbert Cutoffs")
+plt.title("Runtime vs. Physical Qubits for Different Link Hilbert Space Cutoffs")
 plt.yscale("log")  # Log scale if runtime spans a large range
 
 plt.show()
