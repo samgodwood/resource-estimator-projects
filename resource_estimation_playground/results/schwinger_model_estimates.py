@@ -5,22 +5,35 @@ import matplotlib.pyplot as plt
 with open("results/schwinger_model_estimates.json", "r") as f:
     data = json.load(f)
 
-# Extract the values from the JSON array
+# Extract values
 hilbert_cutoffs = [entry["hilbert_cutoff"] for entry in data["estimation_results"]]
 physical_qubits = [entry["physical_qubits"] for entry in data["estimation_results"]]
 runtime = [entry["runtime_seconds"] for entry in data["estimation_results"]]
 
-# Plotting Runtime vs. Physical Qubits for different Hilbert Cutoffs
-plt.figure(figsize=(8, 6))
-plt.plot(physical_qubits, runtime, marker='o', linestyle='-')  
+plt.figure(figsize=(10, 8))
 
-# Label each point with its corresponding Hilbert cutoff
+plt.scatter(physical_qubits, runtime, color='black', s=50, edgecolor='black', alpha=0.8)
+
+# Add labels at each point for Hilbert cutoffs
 for i, cutoff in enumerate(hilbert_cutoffs):
-    plt.text(physical_qubits[i], runtime[i], f"Cutoff={cutoff}", fontsize=9, ha="right")
+    plt.annotate(f"$\Lambda={cutoff}$", 
+                 (physical_qubits[i], runtime[i]), 
+                 textcoords="offset points", 
+                 xytext=(5, 6),  # Offset to avoid overlap with the marker
+                 ha='center', 
+                 fontsize=10, 
+                 color='black')
 
-plt.xlabel("Number of Physical Qubits")
-plt.ylabel("Runtime (seconds)")
-plt.title("Runtime vs. Physical Qubits for Different Link Hilbert Space Cutoffs")
-plt.yscale("log")  # Log scale if runtime spans a large range
+plt.xlabel("Number of Physical Qubits", fontsize=12, fontweight='bold')
+plt.ylabel("Runtime (seconds)", fontsize=12, fontweight='bold')
+plt.title("Runtime vs. Physical Qubits for Different Link Hilbert Space Cutoffs ($\Lambda$)", fontsize=14, fontweight='bold', pad=15)
+
+# plt.xscale("log")  
+# plt.yscale("log")
+
+plt.xticks(fontsize=10)
+plt.yticks(fontsize=10)
+
+plt.tight_layout()
 
 plt.show()
