@@ -1,0 +1,22 @@
+[package]
+name = "qsharp-alice-bob-resource-estimator"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+anyhow = "1.0.81"
+clap = { version = "4.5.4", features = ["derive"] }
+num-bigint = "0.4"
+num-complex = "0.4"
+num-traits = "0.2"
+qsc = { git = "https://github.com/microsoft/qsharp.git", tag = "v1.6.0" }
+resource_estimator = { git = "https://github.com/microsoft/qsharp.git", tag = "v1.6.0" }
+
+[lints.clippy]
+mod_module_files = "warn"
+pedantic = { level = "warn", priority = -1 }
+unwrap_used = "warn"
+missing_errors_doc = "allow"
+missing_panics_doc = "allow"
+module_name_repetitions = "allow"
+
