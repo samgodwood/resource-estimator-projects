@@ -54,7 +54,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mut results = Vec::new();
 
     // Loop over different values of Hilbert space cutoffs
-    for hilbert_cutoff in [10, 20, 50] {
+    for hilbert_cutoff in [10, 20, 50, 100, 1000] {
         // Get the number of qubits and T gates for the current cutoff
         let (num_qubits, num_t_gates) = schwinger_model_params(hilbert_cutoff);
 
