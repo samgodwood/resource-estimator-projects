@@ -1,39 +1,66 @@
 import json
 import matplotlib.pyplot as plt
 
-# Load results from JSON file
-with open("results/schwinger_model_estimates.json", "r") as f:
-    data = json.load(f)
+# Path to the JSON file
+file_path = "./results/schwinger_model_estimates.json"
 
-# Extract values
-hilbert_cutoffs = [entry["hilbert_cutoff"] for entry in data["estimation_results"]]
-physical_qubits = [entry["physical_qubits"] for entry in data["estimation_results"]]
-runtime = [entry["runtime_seconds"] for entry in data["estimation_results"]]
+# Load the data
+with open(file_path, "r") as file:
+    data = json.load(file)
 
-plt.figure(figsize=(10, 8))
+# Extract results
+pareto_results = data["pareto_estimation_results"]
 
-plt.scatter(physical_qubits, runtime, color='black', s=50, edgecolor='black', alpha=0.8)
+# Set up subplots (one for each Hilbert cutoff)
+num_cutoffs = len(pareto_results)
+fig, axes = plt.subplots(
+    nrows=(num_cutoffs + 1) // 2,  # Arrange subplots in 2 columns
+    ncols=2,
+    figsize=(15, 5 * ((num_cutoffs + 1) // 2)),  # Adjust figure size dynamically
+    constrained_layout=True  # Let Matplotlib handle spacing
+)
 
-# Add labels at each point for Hilbert cutoffs
-for i, cutoff in enumerate(hilbert_cutoffs):
-    plt.annotate(f"$\Lambda={cutoff}$", 
-                 (physical_qubits[i], runtime[i]), 
-                 textcoords="offset points", 
-                 xytext=(5, 6),  # Offset to avoid overlap with the marker
-                 ha='center', 
-                 fontsize=10, 
-                 color='black')
+# Flatten axes array for easy iteration
+axes = axes.flatten()
 
-plt.xlabel("Number of Physical Qubits", fontsize=12, fontweight='bold')
-plt.ylabel("Runtime (seconds)", fontsize=12, fontweight='bold')
-plt.title("Runtime vs. Physical Qubits for Different Link Hilbert Space Cutoffs ($\Lambda$)", fontsize=14, fontweight='bold', pad=15)
+# Plot each Hilbert cutoff
+for i, result in enumerate(pareto_results):
+    hilbert_cutoff = result["hilbert_cutoff"]
+    frontier_results = result["frontier_results"]
 
-# plt.xscale("log")  
-# plt.yscale("log")
+    # Extract physical qubits and runtime for the current cutoff
+    physical_qubits = [point["physical_qubits"] for point in frontier_results]
+    runtime_seconds = [point["runtime_seconds"] for point in frontier_results]
 
-plt.xticks(fontsize=10)
-plt.yticks(fontsize=10)
+    # Current subplot axis
+    ax = axes[i]
 
-plt.tight_layout()
+    # Scatter plot with academic styling
+    ax.scatter(
+        physical_qubits,
+        runtime_seconds,
+        color="black",
+        s=60,
+        edgecolor="black",
+        alpha=0.8,
+        label=f"Hilbert Cutoff $\\Lambda={hilbert_cutoff}$"
+    )
 
+    # Label axes and add title
+    ax.set_xlabel("Physical Qubits", fontsize=12, fontweight="bold")
+    ax.set_ylabel("Runtime (s)", fontsize=12, fontweight="bold")
+    ax.set_title(
+        f"$\\Lambda={hilbert_cutoff}$",
+        fontsize=14,
+        fontweight="bold"
+    )
+
+    ax.grid(alpha=0.5)
+    ax.legend(fontsize=10)
+
+# Turn off any unused subplots if num_cutoffs is odd
+for j in range(i + 1, len(axes)):
+    axes[j].axis("off")
+
+# Display the plot
 plt.show()

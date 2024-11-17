@@ -51,7 +51,7 @@ fn schwinger_model_params(lambda: u64) -> (u64, u64) {
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Prepare a vector to store results for different Hilbert cutoffs
-    let mut results = Vec::new();
+    let mut all_results = Vec::new();
 
     // Loop over different values of Hilbert space cutoffs
     for hilbert_cutoff in [10, 20, 50, 100, 1000] {
@@ -90,25 +90,35 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             budget,
         );
 
-        // Perform the estimation and retrieve the results
-        let result = estimation
-            .estimate()
-            .expect("estimation does not fail");
+        // Perform Pareto frontier estimation
+        let frontier = estimation
+            .build_frontier()
+            .expect("frontier exploration does not fail");
 
-        // Append each result to the results vector in JSON format
-        results.push(json!({
+        // Collect the frontier results for this Hilbert cutoff
+        let mut frontier_results = Vec::new();
+        for result in frontier {
+            frontier_results.push(json!({
+                "physical_qubits": result.physical_qubits(),
+                "runtime_seconds": result.runtime() as f64 / 1e9,
+            }));
+        }
+
+        // Append the results to the overall results
+        all_results.push(json!({
             "hilbert_cutoff": hilbert_cutoff,
             "num_logical_qubits": num_qubits,
             "num_t_gates": num_t_gates,
-            "physical_qubits": result.physical_qubits(),
-            "runtime_seconds": result.runtime() as f64 / 1e9,
+            "frontier_results": frontier_results,
         }));
     }
 
     // Write all results to a JSON file
-    let json_results = json!({ "estimation_results": results });
+    let json_results = json!({ "pareto_estimation_results": all_results });
     let mut file = File::create("./results/schwinger_model_estimates.json")?;
     file.write_all(json_results.to_string().as_bytes())?;
+
+    println!("Results written to ./results/schwinger_model_estimates.json");
 
     Ok(())
 }
