@@ -7,6 +7,7 @@ This repository hosts a small collection of examples around quantum resource est
 - **intro_to_resource_estimation**: A set of Jupyter notebooks introducing the basics of resource estimation with Q#. These tutorials are based on the official Microsoft guide, which can be found [here](https://learn.microsoft.com/en-us/azure/quantum/intro-to-resource-estimation).
 - **resource_estimation_playground**: Uses Rust's API to allow custom resource estimation (which allows for different quantum architechtures)
  This includes custom examples and modifications inspired by Q#’s Alice & Bob resource estimator (found [here](https://github.com/Alice-Bob-SW/qsharp-alice-bob-resource-estimator/tree/main)).
+- **qsharp-alice-bob-resource-estimator**: Q# resource estimator for Alice & Bob's architecture original repo, with additional examples to test their architechture for different algorithms.
 
 ## Setup & Installation
 
