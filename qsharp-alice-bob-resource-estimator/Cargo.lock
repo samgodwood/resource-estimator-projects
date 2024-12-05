@@ -774,6 +774,8 @@ dependencies = [
  "num-traits",
  "qsc",
  "resource_estimator",
+ "serde",
+ "serde_json",
 ]
 
 [[package]]

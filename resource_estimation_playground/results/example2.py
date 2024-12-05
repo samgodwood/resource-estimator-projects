@@ -35,5 +35,9 @@ plt.xticks(fontsize=10)
 plt.yticks(fontsize=10)
 
 plt.tight_layout()
-plt.show()
+
+# Save plot to PDF
+output_file = "results/example2.pdf"
+plt.savefig(output_file, format='pdf')
+plt.close()
 

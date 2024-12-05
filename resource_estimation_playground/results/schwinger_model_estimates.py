@@ -62,5 +62,8 @@ for i, result in enumerate(pareto_results):
 for j in range(i + 1, len(axes)):
     axes[j].axis("off")
 
-# Display the plot
-plt.show()
+# Save the plot to a PDF file
+output_path = file_path.replace(".json", ".pdf")
+plt.savefig(output_path, format="pdf", bbox_inches="tight")
+plt.close()
+

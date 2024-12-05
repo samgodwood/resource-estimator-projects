@@ -22,4 +22,8 @@ plt.xlabel("Physical Qubits")
 plt.ylabel("Runtime (seconds)")
 plt.title("Runtime vs Physical Qubits")
 plt.grid(True)
-plt.show()
+
+# Save the plot to a PDF file
+output_path = file_path.replace(".json", ".pdf")
+plt.savefig(output_path, format="pdf", bbox_inches="tight")
+plt.close()

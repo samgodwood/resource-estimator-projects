@@ -1,9 +1,9 @@
 #![warn(missing_docs)]
-//! Estimate the resources required for the Schwinger Model on a
+//! Estimate the resources required for Elliptic Curve Cryptography (ECC) on a
 //! cat-based quantum processor.
 //!
-//! Uses logical counts based on Schwinger model parameterization from 
-//! <https://arxiv.org/abs/2002.11146> and Alice & Bob's resource estimation framework.
+//! Based on É. Gouzien et al.'s article (<https://arxiv.org/abs/2302.06639>)
+//! and code (<https://github.com/ElieGouzien/elliptic_log_cat/tree/master>).
 
 use std::rc::Rc;
 
@@ -12,64 +12,42 @@ use qsharp_alice_bob_resource_estimator::{
 };
 use resource_estimator::estimates::{ErrorBudget, PhysicalResourceEstimation};
 
-/// Compute logical qubits and logical gate counts for the Schwinger Model.
-/// Based on <https://arxiv.org/abs/2002.11146>, Theorem 8.
-fn schwinger_model_params(lambda: u64) -> LogicalCounts {
-    // Placeholder values for N (number of spatial lattice sites) and delta_circ (circuit synthesis error)
-    let n: u64 = 10;
-    let delta_circ: f64 = 1e-3;
+/// Compute logical qubits number and logical gates counts for elliptic curve
+/// discrete logarithm computation, based on <https://arxiv.org/abs/2302.06639>.
+#[allow(clippy::similar_names)]
+fn elliptic_curve_crypto_count(bit_size: u64, window_size: u64) -> LogicalCounts {
+    // Number of qubits for discrete log computation, arXiv:2302.06639 (p. 22, app C.11)
+    let qubit_count = 9 * bit_size + window_size + 4;
+    // Asymptotic gate counts, arXiv:2302.06639 (p. 21, app C.10)
+    let cx_count = (448 * bit_size.pow(3)).div_ceil(window_size);
+    let ccx_count = (348 * bit_size.pow(3)).div_ceil(window_size);
 
-    // Calculate eta (number of qubits per link register)
-    let eta = ((2.0 * lambda as f64).log2().ceil()) as u64;
-
-    // Calculate the number of qubits required using Theorem 8
-    let num_qubits = n * (eta + 1) + 4 * eta - (eta as f64).log2().floor() as u64 - 1;
-
-    // Compute ln_term = ln((6N - 5)/delta_circ)
-    let ln_term = ((6.0 * n as f64 - 5.0) / delta_circ).ln();
-
-    // Terms for lambda_delta calculation
-    let term1 = 2.0 * (n as f64 - 1.0) * (96.0 * eta.pow(2) as f64 + 24.0 * (1.0 - eta as f64)) * (eta as f64).log2();
-    let term2 = 4.45 * eta as f64 * (3.0 * eta as f64).log2();
-    let term3 = (10.35 + 4.45 * eta as f64) * ln_term;
-    let term4 = -200.0 * eta as f64 + 133.95;
-    let term5 = 1.15 * ((2.0 * (6.0 * n as f64 - 5.0)) / delta_circ).log2();
-
-    // Numerator
-    let numerator = term1 + term2 + term3 + term4 + term5;
-
-    // Denominator
-    let denominator = n as f64 * eta.pow(2) as f64 + n as f64 * eta as f64 * ln_term;
-
-    // Calculate lambda_delta
-    let lambda_delta = numerator / denominator;
-
-    // Compute the number of T-gates required
-    let t_gates = ((n as f64) * (eta as f64).powi(2) + (n as f64) * eta as f64 * ln_term) * lambda_delta;
-
-    // Logical gate counts: CX and CCX are approximated as T-gates dominate
-    LogicalCounts::new(num_qubits, 0, t_gates.ceil() as u64)
+    LogicalCounts::new(qubit_count, cx_count, ccx_count)
 }
 
-/// Estimate resources for the Schwinger Model using Alice & Bob's framework.
+/// Estimate resources for EC Shor algorithm from pre-computed counts.
 fn main() -> Result<(), anyhow::Error> {
-    // This value can be changed to investigate different cutoffs
-    let hilbert_cutoff = 50;
+    // This value can be changed to investigate other key sizes, e.g., those in
+    // arXiv:2302.06639 (Table IV, p. 37)
+    let bit_size = 256;
+    // Window size for modular exponentiation (arXiv:2001.09580, sec 4.1, p. 6)
+    // Value w_e as reported in arXiv:2302.06639 (Table IV, p. 37)
+    let window_size = 18;
 
     let qubit = CatQubit::new();
     let qec = RepetitionCode::new();
     let builder = ToffoliBuilder::default();
-    let count = schwinger_model_params(hilbert_cutoff);
+    let count = elliptic_curve_crypto_count(bit_size, window_size);
     let budget = ErrorBudget::new(0.333 * 0.5, 0.333 * 0.5, 0.0);
 
-    let estimation = PhysicalResourceEstimation::new(qec, Rc::new(qubit), builder, Rc::new(count), budget);
+    let estimation =
+        PhysicalResourceEstimation::new(qec, Rc::new(qubit), builder, Rc::new(count), budget);
     let result: AliceAndBobEstimates = estimation.estimate()?.into();
-
-    println!("Estimates from pre-computed logical count (Schwinger Model):");
+    println!("Estimates from pre-computed logical count (elliptic curve discrete logarithm):");
     println!("{result}");
 
     println!("----------------------------------------");
-    println!("Exploration of good estimates from pre-computed logical count (Schwinger Model):");
+    println!("Exploration of good estimates from pre-computed logical count (elliptic curve discrete logarithm):");
     let results = estimation.build_frontier()?;
 
     for r in results {
