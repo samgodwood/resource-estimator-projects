@@ -1,30 +1,66 @@
 import json
 import matplotlib.pyplot as plt
 
-# Define the path to the example3.json file
+# Define the path to the Rabi Model JSON file
 file_path = "./results/Rabi_Model/Rabi_Model.json"
 
 # Load the data from the JSON file
 with open(file_path, "r") as file:
     data = json.load(file)
 
-# Extract the frontier results
-frontier_results = data["frontier_results"]
+# Extract the results for different Hilbert cutoffs
+pareto_results = data["pareto_estimation_results"]
 
-# Extract physical qubits and runtime_seconds into separate lists
-physical_qubits = [result["physical_qubits"] for result in frontier_results]
-runtime_seconds = [result["runtime_seconds"] for result in frontier_results]
+# Set up subplots (one for each Hilbert cutoff)
+num_cutoffs = len(pareto_results)
+fig, axes = plt.subplots(
+    nrows=(num_cutoffs + 1) // 2,  # Arrange subplots in 2 columns
+    ncols=2,
+    figsize=(15, 5 * ((num_cutoffs + 1) // 2)),  # Adjust figure size dynamically
+    constrained_layout=True  # Let Matplotlib handle spacing
+)
 
-# Plot the graph
-plt.figure(figsize=(10, 6))
-plt.plot(physical_qubits, runtime_seconds, marker="o", linestyle="-", label="Error Budget = 0.01")
-plt.xlabel("Physical Qubits")
-plt.ylabel("Runtime (seconds)")
-plt.title("Runtime vs Physical Qubits for $n_{max} = 3$ Rabi Model")
-plt.grid(True)
+# Flatten axes array for easy iteration
+axes = axes.flatten()
 
-# Add legend to the plot
-plt.legend()
+# Plot each Hilbert cutoff
+for i, result in enumerate(pareto_results):
+    hilbert_cutoff = result["hilbert_cutoff"]
+    frontier_results = result["frontier_results"]
+
+    # Extract physical qubits and runtime for the current cutoff
+    physical_qubits = [point["physical_qubits"] for point in frontier_results]
+    runtime_seconds = [point["runtime_seconds"] for point in frontier_results]
+
+    # Current subplot axis
+    ax = axes[i]
+
+    # Scatter plot with academic styling
+    ax.scatter(
+        physical_qubits,
+        runtime_seconds,
+        color="blue",
+        s=60,
+        edgecolor="black",
+        alpha=0.8,
+        label=f"Hilbert Cutoff $n_{{max}}={hilbert_cutoff}$"
+    )
+
+    # Label axes and add title
+    ax.set_xlabel("Physical Qubits", fontsize=12, fontweight="bold")
+    ax.set_ylabel("Runtime (s)", fontsize=12, fontweight="bold")
+    ax.set_title(
+        f"$n_{{max}}={hilbert_cutoff}$",
+        fontsize=14,
+        fontweight="bold"
+    )
+
+    ax.grid(alpha=0.5)
+    ax.legend(fontsize=10)
+
+# Turn off any unused subplots if num_cutoffs is odd
+for j in range(i + 1, len(axes)):
+    axes[j].axis("off")
 
 # Save the plot to a PDF file
 output_path = file_path.replace(".json", ".pdf")
