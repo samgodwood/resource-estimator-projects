@@ -1,4 +1,5 @@
-// Use build frontier
+// Use build frontier for a single Trotter step of a spin-boson Hamiltonian with n_max = 3
+// see https://github.com/samgodwood/bosonic-qiskit/blob/main/playground/Rabi_Model/Trotter_dynamics.ipynb
 
 
 use std::fs::File;
@@ -29,13 +30,13 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // Define logical resource counts with a fixed number of qubits.
     let logical_counts = Rc::new(LogicalResourceCounts {
-        num_qubits: 100,
-        t_count: 10,
-        rotation_count: 10,
-        rotation_depth: 5,
-        ccz_count: 100,
+        num_qubits: 3,
+        t_count: 0,
+        rotation_count: 20,
+        rotation_depth: 12,
+        ccz_count: 0,
         ccix_count: 0,
-        measurement_count: 10,
+        measurement_count: 0,
     });
 
     // Set up an error budget for the resource estimation.
@@ -65,10 +66,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // Write all frontier results to a JSON file in the results directory.
     let json_results = json!({ "frontier_results": frontier_results });
-    let mut file = File::create("./results/example3/example3.json")?;
+    let mut file = File::create("./results/Rabi_Model/Rabi_Model.json")?;
     file.write_all(json_results.to_string().as_bytes())?;
 
-    println!("Frontier results written to ./results/example3/example3.json");
+    println!("Frontier results written to ./results/Rabi_Model/Rabi_Model.json");
 
     Ok(())
 }

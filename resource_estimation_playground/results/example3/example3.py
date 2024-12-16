@@ -2,7 +2,7 @@ import json
 import matplotlib.pyplot as plt
 
 # Define the path to the example3.json file
-file_path = "./results/example3.json"
+file_path = "./results/example3/example3.json"
 
 # Load the data from the JSON file
 with open(file_path, "r") as file:

@@ -2,7 +2,7 @@ import json
 import matplotlib.pyplot as plt
 
 # Load results from JSON file
-with open("results/example2.json", "r") as f:
+with open("results/example2/example2.json", "r") as f:
     data = json.load(f)
 
 # Extract values from the JSON array
@@ -37,7 +37,7 @@ plt.yticks(fontsize=10)
 plt.tight_layout()
 
 # Save plot to PDF
-output_file = "results/example2.pdf"
+output_file = "results/example2/example2.pdf"
 plt.savefig(output_file, format='pdf')
 plt.close()
 

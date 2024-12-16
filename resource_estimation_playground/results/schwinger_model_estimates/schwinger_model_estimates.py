@@ -2,7 +2,7 @@ import json
 import matplotlib.pyplot as plt
 
 # Path to the JSON file
-file_path = "./results/schwinger_model_estimates.json"
+file_path = "./results/schwinger_model_estimates/schwinger_model_estimates.json"
 
 # Load the data
 with open(file_path, "r") as file:

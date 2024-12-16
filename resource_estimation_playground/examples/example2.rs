@@ -35,7 +35,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             ccix_count: 0,
             measurement_count: 10,
         });
-
+     
         // Set up an error budget for the resource estimation using the current budget value.
         let budget = ErrorBudget::new(error_budget_value, error_budget_value, error_budget_value);
 
@@ -63,7 +63,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // Write all results to a JSON file in the results directory.
     let json_results = json!({ "estimation_results": results });
-    let mut file = File::create("./results/example2.json")?;
+    let mut file = File::create("./results/example2/example2.json")?;
     file.write_all(json_results.to_string().as_bytes())?;
 
     Ok(())

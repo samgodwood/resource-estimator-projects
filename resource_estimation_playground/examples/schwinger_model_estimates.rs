@@ -115,10 +115,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // Write all results to a JSON file
     let json_results = json!({ "pareto_estimation_results": all_results });
-    let mut file = File::create("./results/schwinger_model_estimates.json")?;
+    let mut file = File::create("./results/schwinger_model_estimates/schwinger_model_estimates.json")?;
     file.write_all(json_results.to_string().as_bytes())?;
 
-    println!("Results written to ./results/schwinger_model_estimates.json");
+    println!("Results written to ./results/schwinger_model_estimates/schwinger_model_estimates.json");
 
     Ok(())
 }
