@@ -9,6 +9,11 @@ The *resource_estimatiom_playground* directory uses Microsoft Azure's Rust’s A
   - **example2.rs**: Defines logical resource counts directly and writes the resource estimation results to a JSON file (*results/example2.json*).
   - **example3.rs**: Performs Pareto frontier estimation using defined logical resource counts and writes results to a JSON file (*results/example3.json*).
   - **schwinger_model_estimates.rs** Implements a resource estimation for a single timestep of the Schwinger model, based on resource counts from [arXiv:2002.11146](https://arxiv.org/abs/2002.11146) (theorem 8). Writes the resource estimation results to a JSON file (*results/schwinger_model_estimates.json*).
+  - **Rabi_Model.rs** Uses build frontier for to calculate the physical resource requirements for a  single Trotter step of a simple spin-boson Hamiltonian with a bosonic cutoff $n_{max} = 3$.
+- **displacement_operator.rs**: Calculates physical resource requirements for the bosonic displacement operator using a build frontier approach, for:
+    1. Implementing the operator on all-qubit hardware across various bosonic cutoffs.
+    2. Implementing the operator for a fixed cutoff with an error budget to match the error-rate of oscillator-qubit hardware under a specific photon loss rate.
+
 
 
 ## Usage
@@ -22,6 +27,6 @@ The *resource_estimatiom_playground* directory uses Microsoft Azure's Rust’s A
     ```bash
     cargo run --example=example2
     ```
-   Then use `python results/example2.py` to run the python script.
+   Then use `python results/example2/example2.py` to run the python script.
 
-Note: All examples currently use the Azure pre-defined floquet code and majorana qubits, however this can be changed to use the (also predefined) surface code and superconducting qubits.
+Note: All examples currently use the Azure pre-defined surface code and superconducting qubits.
