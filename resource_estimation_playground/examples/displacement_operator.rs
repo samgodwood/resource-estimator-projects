@@ -1,4 +1,9 @@
-// Use build frontier for a bosonic displacement using qubits
+// Use build frontier for a bosonic displacement operator using qubits.
+// We will calculate the Rz gate and Rz depth required for a fixed
+// bosonic hilbert space cutoff.
+// We will also calculate the error budget needed to match the fidelity
+// of a bosonic operation on oscilator-based hardware with gate time = 5ns.
+
 use std::fs::File;
 use std::io::Write;
 use serde_json::json;
@@ -79,10 +84,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let (rz_gates, rz_depth, n_qubits) = displacement_params(fixed_cutoff);
     let mut photon_loss_results = Vec::new();
 
-    for photon_loss_rate in [0.001, 0.01, 0.05, 0.1, 0.2] {
+    for photon_loss_rate in [0.001, 0.005, 0.01, 0.02] {
         let fidelity_value = fidelity(photon_loss_rate);
         let error_budget = 1.0 - fidelity_value;
-
         let code = Protocol::surface_code_gate_based();
         let qubit = Rc::new(PhysicalQubit::qubit_gate_ns_e3());
         let builder = TFactoryBuilder::default();
