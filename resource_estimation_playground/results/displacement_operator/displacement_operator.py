@@ -27,7 +27,7 @@ for result in hilbert_cutoff_results:
     ax.scatter(
         physical_qubits,
         runtime_seconds,
-        label=f"Hilbert Cutoff $n_{{max}}={hilbert_cutoff}$",
+        label=f"$n_{{max}}={hilbert_cutoff}$",
         s=60,
         alpha=0.8,
         edgecolor="black"
@@ -36,7 +36,7 @@ for result in hilbert_cutoff_results:
 # Add labels, legend, and grid
 ax.set_xlabel("Physical Qubits", fontsize=12, fontweight="bold")
 ax.set_ylabel("Runtime (s)", fontsize=12, fontweight="bold")
-ax.set_title("Fixed Error Budget and Varying Hilbert Cutoff", fontsize=14, fontweight="bold")
+# ax.set_title("Fixed Error Budget and Varying Hilbert Cutoff", fontsize=14, fontweight="bold")
 ax.grid(alpha=0.5)
 ax.legend(fontsize=10)
 
@@ -49,7 +49,7 @@ plt.close()
 fig, ax = plt.subplots(figsize=(10, 6))
 
 for result in photon_loss_results:
-    photon_loss_rate = result["photon_loss_rate"]
+    error_budget = result["error_budget"]
     frontier_results = result["frontier_results"]
 
     # Extract physical qubits and runtime for the current photon loss rate
@@ -60,7 +60,7 @@ for result in photon_loss_results:
     ax.scatter(
         physical_qubits,
         runtime_seconds,
-        label=f"Photon Loss $x={photon_loss_rate}$",
+        label=f"$budget={round(error_budget,3)}$",
         s=60,
         alpha=0.8,
         edgecolor="black"
@@ -69,11 +69,11 @@ for result in photon_loss_results:
 # Add labels, legend, and grid
 ax.set_xlabel("Physical Qubits", fontsize=12, fontweight="bold")
 ax.set_ylabel("Runtime (s)", fontsize=12, fontweight="bold")
-ax.set_title("Fixed Cutoff and Varying Photon Loss Rates", fontsize=14, fontweight="bold")
+# ax.set_title("Fixed Cutoff and Varying Photon Loss Rates", fontsize=14, fontweight="bold")
 ax.grid(alpha=0.5)
 ax.legend(fontsize=10)
 
 # Save the plot to a PDF file
-output_path_photon_loss = "./results/displacement_operator/photon_loss_plot.pdf"
+output_path_photon_loss = "./results/displacement_operator/error_budget_plot.pdf"
 plt.savefig(output_path_photon_loss, format="pdf", bbox_inches="tight")
 plt.close()
