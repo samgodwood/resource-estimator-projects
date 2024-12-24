@@ -22,17 +22,18 @@ fn displacement_params(cutoff: usize) -> (usize, usize, usize) {
     (rz_gates, rz_depth, n_qubits)
 }
 
-// Function to calculate fidelity based on photon loss rate
+// Function to calculate fidelity based on photon loss rate with gate time = 5ns
 fn fidelity(photon_loss: f64) -> f64 {
-    -14.6089 * photon_loss.powi(2) - 4.5709 * photon_loss + 1.0002
+    -61.3842 * (0.0840 * photon_loss).exp() + 62.3847
 }
+
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Prepare a vector to store results for different scenarios
     let mut all_results = Vec::new();
 
     // Loop over different values of Hilbert space cutoffs
-    for hilbert_cutoff in [10, 20, 50, 100, 200, 500] {
+    for hilbert_cutoff in [10, 20, 50] {
         let (rz_gates, rz_depth, n_qubits) = displacement_params(hilbert_cutoff);
 
         let code = Protocol::surface_code_gate_based();
