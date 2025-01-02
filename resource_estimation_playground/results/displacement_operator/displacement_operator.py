@@ -77,3 +77,5 @@ ax.legend(fontsize=10)
 output_path_photon_loss = "./results/displacement_operator/error_budget_plot.pdf"
 plt.savefig(output_path_photon_loss, format="pdf", bbox_inches="tight")
 plt.close()
+
+print("Plots saved successfully!")

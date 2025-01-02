@@ -67,3 +67,4 @@ output_path = file_path.replace(".json", ".pdf")
 plt.savefig(output_path, format="pdf", bbox_inches="tight")
 plt.close()
 
+print("Plots saved successfully!")

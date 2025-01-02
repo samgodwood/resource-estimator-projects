@@ -41,3 +41,4 @@ output_file = "results/example2/example2.pdf"
 plt.savefig(output_file, format='pdf')
 plt.close()
 
+print("Plots saved successfully!")

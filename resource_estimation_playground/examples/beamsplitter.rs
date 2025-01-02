@@ -81,7 +81,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     }
 
     // Fixed cutoff and varying photon loss rates
-    let fixed_cutoff = 50;
+    let fixed_cutoff = 30;
     let (rz_gates, rz_depth, n_qubits) = displacement_params(fixed_cutoff);
     let mut photon_loss_results = Vec::new();
 
