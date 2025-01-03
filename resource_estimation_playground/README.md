@@ -10,7 +10,7 @@ The *resource_estimatiom_playground* directory uses Microsoft Azure's Rust’s A
   - **example3.rs**: Performs Pareto frontier estimation using defined logical resource counts and writes results to a JSON file (*results/example3.json*).
   - **schwinger_model_estimates.rs** Implements a resource estimation for a single timestep of the Schwinger model, based on resource counts from [arXiv:2002.11146](https://arxiv.org/abs/2002.11146) (theorem 8). Writes the resource estimation results to a JSON file (*results/schwinger_model_estimates.json*).
   - **Rabi_Model.rs** Uses build frontier for to calculate the physical resource requirements for a  single Trotter step of a simple spin-boson Hamiltonian with a bosonic cutoff $n_{max} = 3$.
-- **displacement_operator.rs**: Calculates physical resource requirements for the bosonic displacement operator using a build frontier approach, for:
+- **beamsplitter.rs and displacement_operator.rs**: Calculates physical resource requirements for the beamsplitter and bosonic displacement operator using a build frontier approach, for:
     1. Implementing the operator on all-qubit hardware across various bosonic cutoffs.
     2. Implementing the operator for a fixed cutoff with an error budget to match the error-rate of oscillator-qubit hardware under a specific photon loss rate.
 
@@ -18,15 +18,25 @@ The *resource_estimatiom_playground* directory uses Microsoft Azure's Rust’s A
 
 ## Usage
 
-1. **Build the Project**: Run the following command to compile the code.
+1. **Build the Project**: Compile the code with the following command:
     ```bash
     cargo build
     ```
 
-2. **Run Examples**: Execute a specific example using `cargo run`. For instance, to run *example2*:
-    ```bash
-    cargo run --example=example2
-    ```
-   Then use `python results/example2/example2.py` to run the python script.
+2. **Run Examples**: Use the `Makefile` to automate running Rust examples and their corresponding Python scripts. For instance:
 
-Note: All examples currently use the Azure pre-defined surface code and superconducting qubits.
+    - To run the `beamsplitter` example:
+      ```bash
+      make beamsplitter
+      ```
+    - To run the `displacement_operator` example:
+      ```bash
+      make displacement_operator
+      ```
+
+   The `Makefile` automates both running the Rust example and executing the corresponding Python script to generate the plots.
+    ```
+
+### **Notes:**
+- All examples currently use the Azure pre-defined surface code and superconducting qubits.
+- Results are saved in the `results/<example_name>/` directory, and plots are generated as `.pdf` files.
