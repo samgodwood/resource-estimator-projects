@@ -18,7 +18,7 @@ use resource_estimator::{
 fn beamsplitter_params(cutoff: usize, max_qubits: usize, parallel_operations: usize) -> (usize, usize, usize) {
     let rz_gates = (13.43 * (cutoff as f64).powf(2.52)).round() as usize * parallel_operations;
     let rz_depth = (12.40 * (cutoff as f64).powf(2.53)).round() as usize;
-    let n_qubits = ((cutoff + 1) as f64).log2().ceil() as usize *  parallel_operations;
+    let n_qubits = ((cutoff + 1) as f64).log2().ceil() as usize * parallel_operations * 2; // 2 for two modes
 
     if n_qubits > max_qubits {
         panic!(
