@@ -4,78 +4,52 @@ import matplotlib.pyplot as plt
 # Define the path to the displacement operator JSON file
 file_path = "./results/displacement_operator/displacement_operator.json"
 
+# Define marker styles for each Hilbert cutoff K
+markers = {7: 'o', 63: 's', 256: '^'}
+
+# Define colors for each method
+colors = {"pauli_decomp": "blue", "newton_iterations": "red"}
+
 # Load the data from the JSON file
 with open(file_path, "r") as file:
     data = json.load(file)
 
-# Extract the results for Hilbert cutoffs and photon loss rates
-hilbert_cutoff_results = data["hilbert_cutoff_results"]
-photon_loss_results = data["photon_loss_results"]
+results = data["results"]
 
-# Plot for fixed error budget and varying Hilbert space cutoff
-fig, ax = plt.subplots(figsize=(10, 6))
+# Group data by (method, K)
+grouped = {}
+for result in results:
+    method = result["method"]
+    K = result["K"]
+    key = (method, K)
+    if key not in grouped:
+        grouped[key] = {"physical_qubits": [], "runtime_seconds": []}
+    for point in result["frontier_results"]:
+        grouped[key]["physical_qubits"].append(point["physical_qubits"])
+        grouped[key]["runtime_seconds"].append(point["runtime_seconds"])
 
-for result in hilbert_cutoff_results:
-    hilbert_cutoff = result["hilbert_cutoff"]
-    frontier_results = result["frontier_results"]
-
-    # Extract physical qubits and runtime for the current cutoff
-    physical_qubits = [point["physical_qubits"] for point in frontier_results]
-    runtime_seconds = [point["runtime_seconds"] for point in frontier_results]
-
-    # Scatter plot
-    ax.scatter(
-        physical_qubits,
-        runtime_seconds,
-        label=f"$n_{{max}}={hilbert_cutoff}$",
+# Create a scatter plot for runtime vs physical qubits
+plt.figure(figsize=(10, 6))
+for (method, K), values in grouped.items():
+    plt.scatter(
+        values["physical_qubits"],
+        values["runtime_seconds"],
         s=60,
         alpha=0.8,
+        marker=markers.get(K, 'o'),
+        color=colors.get(method, "black"),
+        label=f"{method}, K={K}",
         edgecolor="black"
     )
 
-# Add labels, legend, and grid
-ax.set_xlabel("Physical Qubits", fontsize=12, fontweight="bold")
-ax.set_ylabel("Runtime (s)", fontsize=12, fontweight="bold")
-# ax.set_title("Fixed Error Budget and Varying Hilbert Cutoff", fontsize=14, fontweight="bold")
-ax.grid(alpha=0.5)
-ax.legend(fontsize=10)
-
-# Save the plot to a PDF file
-output_path_cutoff = "./results/displacement_operator/hilbert_cutoff_plot.pdf"
-plt.savefig(output_path_cutoff, format="pdf", bbox_inches="tight")
+plt.xlabel("Physical Qubits", fontsize=12, fontweight="bold")
+plt.ylabel("Runtime (s)", fontsize=12, fontweight="bold")
+plt.title("Runtime vs Physical Qubits by Method and Hilbert Cutoff", fontsize=14, fontweight="bold")
+plt.grid(alpha=0.5)
+plt.legend(fontsize=10)
+output_path = "./results/displacement_operator/runtime_vs_physical_qubits.pdf"
+plt.savefig(output_path, format="pdf", bbox_inches="tight")
 plt.close()
 
-# Plot for fixed cutoff and varying photon loss rates
-fig, ax = plt.subplots(figsize=(10, 6))
+print("Runtime vs Physical Qubits plot saved successfully!")
 
-for result in photon_loss_results:
-    error_budget = result["error_budget"]
-    frontier_results = result["frontier_results"]
-
-    # Extract physical qubits and runtime for the current photon loss rate
-    physical_qubits = [point["physical_qubits"] for point in frontier_results]
-    runtime_seconds = [point["runtime_seconds"] for point in frontier_results]
-
-    # Scatter plot
-    ax.scatter(
-        physical_qubits,
-        runtime_seconds,
-        label=f"$budget={round(error_budget,3)}$",
-        s=60,
-        alpha=0.8,
-        edgecolor="black"
-    )
-
-# Add labels, legend, and grid
-ax.set_xlabel("Physical Qubits", fontsize=12, fontweight="bold")
-ax.set_ylabel("Runtime (s)", fontsize=12, fontweight="bold")
-# ax.set_title("Fixed Cutoff and Varying Photon Loss Rates", fontsize=14, fontweight="bold")
-ax.grid(alpha=0.5)
-ax.legend(fontsize=10)
-
-# Save the plot to a PDF file
-output_path_photon_loss = "./results/displacement_operator/error_budget_plot.pdf"
-plt.savefig(output_path_photon_loss, format="pdf", bbox_inches="tight")
-plt.close()
-
-print("Plots saved successfully!")

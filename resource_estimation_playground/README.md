@@ -21,7 +21,7 @@ The *resource_estimatiom_playground* directory uses Microsoft Azure's Rust’s A
 1. **Build the Project**: Compile the code with the following command:
     ```bash
     cargo build
-    ```
+    ```ss
 
 2. **Run Examples**: Use the `Makefile` to automate running Rust examples and their corresponding Python scripts. For instance:
 
@@ -35,7 +35,6 @@ The *resource_estimatiom_playground* directory uses Microsoft Azure's Rust’s A
       ```
 
    The `Makefile` automates both running the Rust example and executing the corresponding Python script to generate the plots.
-    ```
 
 ### **Notes:**
 - All examples currently use the Azure pre-defined surface code and superconducting qubits.
